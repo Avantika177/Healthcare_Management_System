@@ -1,4 +1,6 @@
 Hospital Management SQL Project
+
+
 Introduction
 
 This project simulates a hospital management system using structured data and SQL queries. The purpose is to analyze hospital data, gain meaningful insights, and practice SQL operations including joins, filtering, grouping, and aggregations.
@@ -17,7 +19,6 @@ Doctors.csv: Details about each doctor, including their specialty.
 
 Appointments.csv: Records of patient appointments including date, time, and reasons.
 
-
 Data Cleaning
 
 Ensured all IDs are unique and properly formatted.
@@ -28,39 +29,27 @@ Verified all foreign key relationships are consistent.
 
 Standardized formats (e.g., date format in Appointments.csv).
 
-
 Questions
 
-1. Doctors who haven’t conducted any appointments.
+Doctors who haven’t conducted any appointments.
 
+Patients with more than 2 appointments in a day.
 
-2. Patients with more than 2 appointments in a day.
+Appointments for reasons like 'Fever' or 'Cough'.
 
+Doctor with the highest number of female patients.
 
-3. Appointments for reasons like 'Fever' or 'Cough'.
+Patients with appointments from different specialties.
 
+Youngest patient with at least one appointment.
 
-4. Doctor with the highest number of female patients.
+Specialty with the most appointments.
 
+Count of male and female patients each doctor treated.
 
-5. Patients with appointments from different specialties.
+Appointments in the last 7 days.
 
-
-6. Youngest patient with at least one appointment.
-
-
-7. Specialty with the most appointments.
-
-
-8. Count of male and female patients each doctor treated.
-
-
-9. Appointments in the last 7 days.
-
-
-10. Doctors who have weekend appointments.
-
-
+Doctors who have weekend appointments.
 
 Data Insights
 
@@ -72,21 +61,18 @@ Highlighted gender patterns in doctor-patient interactions.
 
 Found patients who frequently visit multiple departments.
 
-
 Conclusion
-
 This project demonstrates the power of SQL in extracting actionable insights from structured hospital data. With the help of relational databases, we can analyze healthcare operations and improve decision-making.
 
 Tool Used
-
 MySQL for database creation, query execution, and analysis.
 
 Excel for initial data inspection and formatting.
 
-VS Code / Notepad++ for writing and managing SQL scripts.
-
 
 License
-
 This project is open-source and free to use for learning and educational purposes.
+
+
+
 
