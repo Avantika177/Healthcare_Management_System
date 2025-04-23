@@ -1,0 +1,205 @@
+Create database Healthcare_management;
+
+Use Healthcare_management;
+
+Create Table Doctors (
+DoctorID int Primary key,
+FirstName Varchar (50),
+LastName Varchar (50),
+Specialty varchar (100),
+PhoneNumber varchar (15)
+);
+
+
+Create Table Patients (
+PatientID int primary key,
+FirstName varchar (50),
+LastName varchar (50),
+DateOfBirth date,
+Gender Varchar (10),
+PhoneNumber varchar (15)
+);
+
+
+CREATE TABLE Appointments (
+    AppointmentID INT PRIMARY KEY,
+    PatientID INT,
+    DoctorID INT,
+    AppointmentDate DATETIME,
+    Reason VARCHAR(100),
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+);
+
+
+-- List the doctors and the total number of appointments each doctor has conducted.
+SELECT 
+    d.DoctorID,
+    CONCAT(d.FirstName, ' ', d.LastName) AS DoctorName,
+    COUNT(a.AppointmentID) AS TotalAppointments
+FROM 
+    Doctors d
+LEFT JOIN 
+    Appointments a ON d.DoctorID = a.DoctorID
+GROUP BY 
+    d.DoctorID, d.FirstName, d.LastName;
+    
+    
+-- Retrieve the names of patients who have appointments on '2023-11-24' and the reason for their appointments.
+SELECT 
+    CONCAT(p.FirstName, ' ', p.LastName) AS PatientName,
+    a.Reason
+FROM 
+    Appointments a
+JOIN 
+    Patients p ON a.PatientID = p.PatientID
+WHERE 
+    DATE(a.AppointmentDate) = '2023-11-24';
+    
+    
+--  Find the top 3 patients with the most appointments and the total number of appointments each of them has had. 
+SELECT 
+    CONCAT(p.FirstName, ' ', p.LastName) AS PatientName,
+    COUNT(a.AppointmentID) AS TotalAppointments
+FROM 
+    Appointments a
+JOIN 
+    Patients p ON a.PatientID = p.PatientID
+GROUP BY 
+    a.PatientID
+ORDER BY 
+    TotalAppointments DESC
+LIMIT 3;
+
+
+-- Calculate the average number of appointments per doctor.
+SELECT 
+    AVG(AppointmentCount) AS AverageAppointmentsPerDoctor
+FROM (
+    SELECT 
+        DoctorID, COUNT(*) AS AppointmentCount
+    FROM 
+        Appointments
+    GROUP BY 
+        DoctorID
+) AS DoctorAppointments;
+
+-- Find the patient who has the most recent appointment, along with the appointment date and reason.
+SELECT 
+    CONCAT(p.FirstName, ' ', p.LastName) AS PatientName,
+    a.AppointmentDate,
+    a.Reason
+FROM 
+    Appointments a
+JOIN 
+    Patients p ON a.PatientID = p.PatientID
+ORDER BY 
+    a.AppointmentDate DESC
+LIMIT 1;
+
+
+-- Retrieve the doctors who have conducted appointments with patients of both genders.
+SELECT 
+    CONCAT(d.FirstName, ' ', d.LastName) AS DoctorName
+FROM 
+    Appointments a
+JOIN 
+    Doctors d ON a.DoctorID = d.DoctorID
+JOIN 
+    Patients p ON a.PatientID = p.PatientID
+GROUP BY 
+    d.DoctorID
+HAVING 
+    COUNT(DISTINCT p.Gender) = 2;
+    
+    
+-- List the patients who have had appointments with doctors of different specialties.
+SELECT 
+    CONCAT(p.FirstName, ' ', p.LastName) AS PatientName
+FROM 
+    Appointments a
+JOIN 
+    Patients p ON a.PatientID = p.PatientID
+JOIN 
+    Doctors d ON a.DoctorID = d.DoctorID
+GROUP BY 
+    p.PatientID
+HAVING 
+    COUNT(DISTINCT d.Specialty) > 1;
+
+
+-- Find the doctor who has treated the highest number of female patients.
+SELECT d.FirstName, d.LastName, COUNT(*) AS FemalePatients
+FROM 
+ Appointments a
+JOIN 
+ Patients p ON a.PatientID = p.PatientID
+JOIN 
+ Doctors d ON a.DoctorID = d.DoctorID
+WHERE 
+ p.Gender = 'Female'
+GROUP BY 
+ d.DoctorID
+ORDER BY 
+ FemalePatients DESC 
+LIMIT 1;
+
+
+-- List patients who have had appointments with doctors from more than one department.
+SELECT 
+ p.FirstName, p.LastName
+FROM 
+ Appointments a
+JOIN 
+ Patients p ON a.PatientID = p.PatientID
+JOIN 
+ Doctors d ON a.DoctorID = d.DoctorID
+GROUP BY 
+ a.PatientID
+HAVING COUNT(DISTINCT d.Specialty) > 1;
+
+
+-- Which specialty has conducted the most appointments overall?
+SELECT 
+ d.Specialty, COUNT(*) AS TotalAppointments
+FROM  
+ Appointments a
+JOIN 
+ Doctors d ON a.DoctorID = d.DoctorID
+GROUP BY 
+ d.Specialty
+ORDER BY TotalAppointments DESC
+LIMIT 1;
+
+-- Count how many male and female patients each doctor has treated.
+SELECT 
+  d.FirstName, d.LastName,
+       SUM(CASE WHEN p.Gender = 'Male' THEN 1 ELSE 0 END) AS MalePatients,
+       SUM(CASE WHEN p.Gender = 'Female' THEN 1 ELSE 0 END) AS FemalePatients
+FROM 
+ Appointments a
+JOIN  
+ Patients p ON a.PatientID = p.PatientID
+JOIN 
+ Doctors d ON a.DoctorID = d.DoctorID
+GROUP BY d.DoctorID;
+
+
+-- List patients who had appointments in the last 7 days.
+SELECT 
+p.FirstName, p.LastName, a.AppointmentDate
+FROM 
+ Appointments a
+JOIN 
+ Patients p ON a.PatientID = p.PatientID
+WHERE 
+ a.AppointmentDate >= CURDATE() - INTERVAL 7 DAY;
+
+
+
+
+
+
+
+
+
